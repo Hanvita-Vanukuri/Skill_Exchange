@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SkillGram Pro — Advanced</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      --bg1:#eef7ff;
+      --card:#ffffff;
+      --accent:#4facfe;
+      --accent2:#00c6ff;
+      --muted:#666;
+      --glass: rgba(255,255,255,0.86);
+    }
+    *{box-sizing:border-box}
+    body {
+      margin:0; font-family:Inter,Segoe UI,Roboto,Arial;
+      background: linear-gradient(135deg,var(--bg1),#dff7ff 60%);
+      min-height:100vh; display:flex; justify-content:center; padding:28px;
+    }
+    .login-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #4facfe 0%, #00c6ff 100%);
+      transition: background 0.5s;
+      padding: 32px;
+    }
+    .login-card, .auth-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(22,35,60,0.16);
+      padding: 38px 32px;
+      width: 100%;
+      max-width: 400px;
+      animation: fadein 0.7s;
+    }
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(20px);}
+      to   { opacity: 1; transform: none;}
+    }
+    .login-logo {
+      width: 70px; height: 70px; margin: 0 auto 12px auto; display: block;
+      border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    }
+    .login-title {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: center;
+      color: #2b6cb0;
+      margin-bottom: 16px;
+      letter-spacing: 0.03em;
+    }
+    label {
+      display: block;
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      margin-top: 14px;
+      color: #44567c;
+    }
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      border-radius: 8px;
+      border: 1px solid #e6f3ff;
+      background: #f9fdff;
+      transition: border-color 0.2s;
+      margin-bottom: 6px;
+    }
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #4facfe;
+      outline: none;
+    }
+    button {
+      padding: 12px 0;
+      margin-top: 18px;
+      border-radius: 999px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(90deg,#4facfe,#00c6ff);
+      color: white;
+      box-shadow: 0 4px 16px rgba(22,35,60,0.08);
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+    }
+    button:hover:enabled {
+      background: linear-gradient(90deg,#00c6ff,#009bff);
+    }
+    .withdraw-btn {
+      background: #cc4b4b;
+      box-shadow: 0 2px 7px rgba(204,75,75,0.17);
+      width: auto;
+      padding: 7px 14px;
+    }
+    .withdraw-btn:hover {
+      background-color: #a83434;
+      box-shadow: 0 4px 14px rgba(168,52,52,0.23);
+    }
+    .small-btn {
+      padding: 7px 16px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(90deg,#4facfe,#00c6ff);
+      color: white;
+      font-weight: 500;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(50,100,255,0.08);
+      margin-bottom: 2px;
+      width: auto;
+      display: inline-block;
+      transition: box-shadow 0.15s, background 0.2s;
+    }
+    .small-btn:hover:enabled {
+      background: linear-gradient(90deg,#65c7f7,#009bff);
+      box-shadow: 0 3px 9px rgba(50,100,255,0.17);
+    }
+    .login-nav,
+    .register-nav,
+    .forgot-nav {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+    .login-nav span,
+    .register-nav span,
+    .forgot-nav span {
+      color: #4facfe;
+      cursor: pointer;
+      transition: color 0.2s;
+      outline: none;
+    }
+    .login-nav span:hover,
+    .register-nav span:hover,
+    .forgot-nav span:hover {
+      color: #2b6cb0;
+      text-decoration: underline;
+    }
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), var(--glass));
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(22, 35, 60, 0.12);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      padding: 18px;
+    }
+    .left {
+      padding: 18px;
+      background: var(--card);
+      border-radius: 10px;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .logo {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 20px;
+      text-align: center;
+    }
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      margin: 6px auto;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+    .profile-name {
+      text-align: center;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+    .profile-small {
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .xp-bar {
+      width: 100%;
+      background: #f1f6ff;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 7px 0;
+    }
+    .xp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 999px;
+      transition: width 0.4s;
+    }
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .nav-btn {
+      background: #f6fbff;
+      border: 1px solid #e8f6ff;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      width: 100%;
+    }
+    .nav-btn.active {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: white;
+      box-shadow: 0 6px 18px rgba(0, 140, 255, 0.14);
+    }
+    .main {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .chat-box {
+      border: 1px solid #e8f3ff;
+      padding: 10px;
+      height: 300px;
+      overflow: auto;
+      border-radius: 8px;
+      background: #fbfeff;
+      white-space: pre-wrap;
+    }
+    .msg {
+      padding: 8px 12px;
+      border-radius: 12px;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+    .me {
+      margin-left: auto;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: white;
+    }
+    .them {
+      margin-right: auto;
+      background: #eef4ff;
+      color: #222;
+    }
+    .timestamp {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      text-align: right;
+    }
+    .leaderboard {
+      max-height: 320px;
+      overflow: auto;
+    }
+    .leader-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: #f6fbff;
+    }
+    .skill-tag {
+      display: inline-block;
+      padding: 6px 10px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: white;
+      border-radius: 8px;
+      margin: 4px 8px 0 0;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      font-weight: 500;
+    }
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: #333;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      user-select: none;
+      pointer-events: none;
+    }
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .left {
+        order: 2;
+      }
+      .main {
+        order: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+    const { useState, useEffect } = React;
+
+    function Toast({ message, onClose }) {
+      useEffect(() => {
+        const timer = setTimeout(onClose, 3000);
+        return () => clearTimeout(timer);
+      }, [onClose]);
+      return <div className="toast">{message}</div>;
+    }
+
+    function App() {
+      const defaultProfiles = [
+        { username: "alice", password: "123", name: "Alice Johnson", email: "alice@mail.com", bio: "React enthusiast & mentor", skills: ["React", "JavaScript"], xp: 140, avatar: "", badge: "Mentor" },
+        { username: "bob", password: "123", name: "Bob Patel", email: "bob@mail.com", bio: "Data scientist - loves Python", skills: ["Python", "Machine Learning"], xp: 90, avatar: "", badge: "Newbie" },
+        { username: "charlie", password: "123", name: "Charlie Nguyen", email: "charlie@mail.com", bio: "Android dev & open-source contributor", skills: ["Kotlin", "Android"], xp: 160, avatar: "", badge: "Pro" },
+        { username: "diana", password: "123", name: "Diana Cruz", email: "diana@mail.com", bio: "Product Designer & UX researcher", skills: ["Design", "Figma"], xp: 75, avatar: "", badge: "Mentor" },
+      ];
+
+      const skillOptions = ["React", "JavaScript", "Python", "Machine Learning", "Android", "Kotlin", "Design", "SQL", "Figma"];
+
+      const [users, setUsers] = useState(() => JSON.parse(localStorage.getItem("sg_users") || "null") || defaultProfiles);
+      const [currentUser, setCurrentUser] = useState(() => JSON.parse(localStorage.getItem("sg_current")) || null);
+      const [requests, setRequests] = useState(() => JSON.parse(localStorage.getItem("sg_requests") || "[]"));
+      const [chats, setChats] = useState(() => JSON.parse(localStorage.getItem("sg_chats") || "{}"));
+      const [unreads, setUnreads] = useState(() => JSON.parse(localStorage.getItem("sg_unreads") || "{}"));
+      const [view, setView] = useState(currentUser ? "app" : "auth");
+      const [activeTab, setActiveTab] = useState("dashboard");
+      const [search, setSearch] = useState("");
+      const [skillFilter, setSkillFilter] = useState([]);
+      const [preselectChat, setPreselectChat] = useState("");
+      const [toast, setToast] = useState("");
+      const [editProfileOpen, setEditProfileOpen] = useState(false);
+
+      useEffect(() => {
+        localStorage.setItem("sg_users", JSON.stringify(users));
+        localStorage.setItem("sg_requests", JSON.stringify(requests));
+        localStorage.setItem("sg_chats", JSON.stringify(chats));
+        localStorage.setItem("sg_current", JSON.stringify(currentUser));
+        localStorage.setItem("sg_unreads", JSON.stringify(unreads));
+      }, [users, requests, chats, currentUser, unreads]);
+
+      const badgeForXp = xp => {
+        if (xp > 250) return "Legend";
+        if (xp > 150) return "Pro";
+        if (xp > 80) return "Mentor";
+        return "Newbie";
+      };
+
+      const awardXP = (username, points) => {
+        setUsers(prev => prev.map(u => u.username === username ? { ...u, xp: (u.xp || 0) + points, badge: badgeForXp((u.xp || 0) + points) } : u));
+        if (currentUser && currentUser.username === username) {
+          setCurrentUser(prev => ({ ...prev, xp: (prev.xp || 0) + points, badge: badgeForXp((prev.xp || 0) + points) }));
+        }
+      };
+
+      const register = (profile) => {
+        if (!profile.username || !profile.password || !profile.name || !profile.email || !profile.skills || profile.skills.length === 0) {
+          alert("Please fill all required fields.");
+          return false;
+        }
+        if (users.some(u => u.username === profile.username)) {
+          alert("That username is already taken.");
+          return false;
+        }
+        const newUser = { ...profile, xp: 0, badge: "Newbie" };
+
+        setUsers(prevUsers => {
+          const updatedUsers = [...prevUsers, newUser];
+
+          setChats(prevChats => {
+            const newChats = { ...prevChats };
+            updatedUsers.forEach(user => {
+              if (user.username !== newUser.username) {
+                const key = [newUser.username, user.username].sort().join("__");
+                if (!newChats[key]) newChats[key] = [];
+              }
+            });
+            return newChats;
+          });
+
+          return updatedUsers;
+        });
+
+        setCurrentUser(newUser);
+        setView("app");
+        setActiveTab("dashboard");
+        setToast("Welcome! Profile created successfully.");
+        setTimeout(() => setPreselectChat(""), 1000);
+        return true;
+      };
+
+      const login = (username, password) => {
+        const user = users.find(u => u.username === username && u.password === password);
+        if (!user) { alert("Invalid login"); return false; }
+        setCurrentUser(user); setView("app"); setActiveTab("dashboard");
+        setToast(`Welcome back, ${user.name}!`);
+        return true;
+      };
+
+      const logout = () => { setCurrentUser(null); setView("auth"); setActiveTab("profiles"); setPreselectChat(""); };
+
+      const resetPassword = (username, newPass) => {
+        if (!users.some(u => u.username === username)) { alert("No such user"); return; }
+        setUsers(u => u.map(x => x.username === username ? { ...x, password: newPass } : x));
+        alert("Password changed.");
+      };
+
+      const sendRequest = (toUsername, note = "") => {
+        if (!currentUser) { alert("Login first"); return; }
+        if (requests.some(r => r.from === currentUser.username && r.to === toUsername && r.status === "pending")) {
+          alert("Request already sent."); return;
+        }
+        setRequests(r => [...r, { from: currentUser.username, to: toUsername, note, status: "pending", created: Date.now() }]);
+        awardXP(currentUser.username, 10);
+        setUnreads(prev => ({ ...prev, ["req_" + toUsername]: (prev["req_" + toUsername] || 0) + 1 }));
+        setToast("Skill exchange request sent!");
+      };
+
+      const withdrawRequest = (toUsername) => {
+        if (!currentUser) { alert("Login first."); return; }
+        setRequests(prev => prev.filter(r => !(r.from === currentUser.username && r.to === toUsername && r.status === "pending")));
+        setUnreads(prev => ({ ...prev, ["req_" + toUsername]: Math.max(0, (prev["req_" + toUsername] || 0) - 1) }));
+        setToast("Request withdrawn.");
+      };
+
+      function respondRequestAndAward(reqIndex, accept) {
+        const incoming = requests.filter(r => r.to === currentUser.username);
+        const target = incoming[reqIndex]; if (!target) return;
+        const globalIndex = requests.findIndex(r => r.from === target.from && r.to === target.to && r.created === target.created);
+        if (globalIndex < 0) return;
+        setRequests(prev => prev.map((r, i) => i === globalIndex ? { ...r, status: accept ? "accepted" : "rejected" } : r));
+        if (accept) { awardXP(target.from, 20); awardXP(target.to, 30); setToast("Request accepted! XP awarded."); }
+        else setToast("Request rejected.");
+        setUnreads(prev => ({ ...prev, ["req_" + currentUser.username]: Math.max(0, (prev["req_" + currentUser.username] || 0) - 1) }));
+      }
+
+      const sendMessage = (toUsername, text) => {
+        if (!text.trim()) return;
+        const key = [currentUser.username, toUsername].sort().join("__");
+        const msg = { from: currentUser.username, text: text.trim(), time: new Date().toLocaleTimeString() };
+        setChats(prev => ({ ...prev, [key]: [...(prev[key] || []), msg] }));
+        setUnreads(prev => ({ ...prev, [key]: (prev[key] || 0) + 1 }));
+      };
+
+      const markRead = (chatKey) => { setUnreads(prev => ({ ...prev, [chatKey]: 0 })); };
+
+      const allSkills = Array.from(new Set(users.flatMap(u => u.skills || []))).sort();
+
+      const visibleUsers = users.filter(u => {
+        const matchesSearch = !search || (u.name.toLowerCase().includes(search.toLowerCase()) || u.username.toLowerCase().includes(search.toLowerCase()));
+        const matchesSkill = skillFilter.length === 0 || skillFilter.every(s => (u.skills || []).includes(s));
+        return matchesSearch && matchesSkill;
+      });
+
+      const leaderboard = [...users].sort((a, b) => (b.xp || 0) - (a.xp || 0));
+
+      function placeholderAvatar(name) {
+        const initials = (name || "?").split(" ").map(s => s[0]).slice(0, 2).join("").toUpperCase();
+        const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'>
+          <rect width='100%' height='100%' fill='#dfeeff'/>
+          <text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='Segoe UI' font-size='48' fill='#2b6cb0'>${initials}</text>
+        </svg>`;
+        return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+      }
+
+      function openChatWith(username) {
+        setActiveTab("chats");
+        setPreselectChat(username);
+      }
+
+      function saveProfile(updatedUser) {
+        setUsers(prev => prev.map(u => u.username === updatedUser.username ? updatedUser : u));
+        if (currentUser && currentUser.username === updatedUser.username) {
+          setCurrentUser(updatedUser);
+        }
+        setEditProfileOpen(false);
+        setToast("Profile updated successfully.");
+      }
+
+      return (
+        <div style={{ width: "100%" }}>
+          {view === "auth" && <AuthPanel onLogin={login} onRegister={register} onReset={resetPassword} />}
+          {view === "app" && currentUser && (
+            <div className="app">
+              <div className="left">
+                <div className="logo">SkillGram Pro</div>
+                <img className="avatar" src={currentUser.avatar || placeholderAvatar(currentUser.name)} alt="avatar" />
+                <div className="profile-name">{currentUser.name}</div>
+                <div className="profile-small">@{currentUser.username}</div>
+                <div style={{ padding: "6px 0" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                    <div className="muted">XP: <strong>{currentUser.xp || 0}</strong></div>
+                    <div className="muted">Badge: <strong>{currentUser.badge}</strong></div>
+                  </div>
+                  <div className="xp-bar"><div className="xp-fill" style={{ width: Math.min(100, (currentUser.xp || 0) % 200) + '%' }} /></div>
+                </div>
+                <nav>
+                  <button className={`nav-btn ${activeTab === "dashboard" ? "active" : ""}`} onClick={() => setActiveTab("dashboard")}>Dashboard</button>
+                  <button className={`nav-btn ${activeTab === "profiles" ? "active" : ""}`} onClick={() => setActiveTab("profiles")}>
+                    Profiles {unreads["req_" + currentUser.username] ? `• ${unreads["req_" + currentUser.username]}` : ""}
+                  </button>
+                  <button className={`nav-btn ${activeTab === "requests" ? "active" : ""}`} onClick={() => setActiveTab("requests")}>Requests</button>
+                  <button className={`nav-btn ${activeTab === "chats" ? "active" : ""}`} onClick={() => setActiveTab("chats")}>
+                    Chats {Object.keys(unreads).filter(k => k.includes("__") && unreads[k] > 0).length > 0 ? `• ${Object.values(unreads).reduce((a, b) => a + b, 0)}` : ""}
+                  </button>
+                  <button className={`nav-btn ${activeTab === "leaderboard" ? "active" : ""}`} onClick={() => setActiveTab("leaderboard")}>Leaderboard</button>
+                  <button className="nav-btn" onClick={logout}>Logout</button>
+                </nav>
+              </div>
+              <div className="main">
+                {editProfileOpen && (
+                  <EditProfileModal currentUser={currentUser} onSave={saveProfile} onClose={() => setEditProfileOpen(false)} skills={skillOptions} />
+                )}
+                {activeTab === "profiles" && (
+                  <>
+                    <h3>Profiles</h3>
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Search by name or username"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        style={{ padding: "10px", width: "calc(100% - 24px)", marginBottom: 12, borderRadius: 8, border: "1px solid #e6f3ff" }}
+                      />
+                      <label>Filter skills (Ctrl/Cmd+Click for multi-select)</label>
+                      <select
+                        multiple
+                        style={{ width: "100%", minHeight: 80, marginBottom: 12 }}
+                        value={skillFilter}
+                        onChange={e => setSkillFilter([...e.target.selectedOptions].map(o => o.value))}
+                      >
+                        {allSkills.map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                    <div className="grid">
+                      {visibleUsers.map(u => {
+                        const outgoingRequest = requests.find(r => r.from === currentUser.username && r.to === u.username && r.status === "pending");
+                        return (
+                          <div key={u.username} className="card">
+                            <div style={{ display: "flex", gap: 13, alignItems: "center" }}>
+                              <img src={u.avatar || placeholderAvatar(u.name)} className="avatar" style={{ width: 56, height: 56 }} alt="profile" />
+                              <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: 700 }}>{u.name} <span style={{ fontSize: 13, color: "#333" }}>@{u.username}</span></div>
+                                <div className="muted">{u.bio}</div>
+                              </div>
+                            </div>
+                            <div>{(u.skills || []).map(s => <span key={s} className="skill-tag">{s}</span>)}</div>
+                            <div style={{ marginTop: 6, fontSize: 13, fontStyle: "italic", color: "#555" }}>
+                              {outgoingRequest && outgoingRequest.note && `Note: ${outgoingRequest.note}`}
+                            </div>
+                            <div className="profile-actions">
+                              {!outgoingRequest ? (
+                                <RequestWithNoteBtn toUsername={u.username} sendRequest={sendRequest} />
+                              ) : (
+                                <button className="withdraw-btn" onClick={() => withdrawRequest(u.username)}>Withdraw Request</button>
+                              )}
+                              <button className="chat-btn" onClick={() => openChatWith(u.username)}>
+                                Chat
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {visibleUsers.length === 0 && <div className="muted">No profiles match your search/filter.</div>}
+                    </div>
+                  </>
+                )}
+                {activeTab === "requests" && (
+                  <>
+                    <h3>Incoming Requests</h3>
+                    {requests.filter(r => r.to === currentUser.username).length === 0 && <div className="muted">No incoming requests</div>}
+                    {requests.filter(r => r.to === currentUser.username).map((r, i) => {
+                      const requester = users.find(u => u.username === r.from) || { name: r.from };
+                      return (
+                        <div key={i} className="card">
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <div style={{ width: "80%" }}>
+                              <div style={{ fontWeight: 700 }}>{requester.name} <span className="muted">@{requester.username}</span></div>
+                              <div className="muted">{requester.bio}</div>
+                              <div style={{ fontSize: 13, marginTop: 4, fontStyle: "italic" }}>{r.note ? `Note: ${r.note}` : ""}</div>
+                            </div>
+                            <div style={{ display: "flex", gap: 8 }}>
+                              {r.status === "pending" ? (
+                                <>
+                                  <button className="small-btn" onClick={() => { respondRequestAndAward(i, true); }}>Accept</button>
+                                  <button className="small-btn" style={{ background: "#aaa" }} onClick={() => respondRequestAndAward(i, false)}>Reject</button>
+                                </>
+                              ) : <div className="muted" style={{ alignSelf: "center" }}>({r.status})</div>}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <h3 style={{ marginTop: 12 }}>Outgoing Requests</h3>
+                    {requests.filter(r => r.from === currentUser.username).length === 0 && <div className="muted">No outgoing requests</div>}
+                    {requests.filter(r => r.from === currentUser.username).map((r, i) => {
+                      const target = users.find(u => u.username === r.to) || { name: r.to };
+                      return (
+                        <div key={i} className="card">
+                          <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            <div>
+                              <div style={{ fontWeight: 700 }}>{target.name} <span className="muted">@{target.username}</span></div>
+                              <div className="muted">{r.status || "pending"}</div>
+                              <div style={{ fontSize: 13, fontStyle: "italic", marginTop: 3 }}>{r.note ? `Note: ${r.note}` : ""}</div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                )}
+                {activeTab === "chats" && (
+                  <ChatWindow
+                    currentUser={currentUser}
+                    users={users}
+                    chats={chats}
+                    unreads={unreads}
+                    sendMessageTo={sendMessage}
+                    markRead={markRead}
+                    preselect={preselectChat}
+                    setPreselect={setPreselectChat}
+                  />
+                )}
+                {activeTab === "leaderboard" && (
+                  <div className="leaderboard">
+                    {leaderboard.map((u, idx) =>
+                      <div key={u.username} className="leader-row">
+                        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                          <strong>#{idx + 1}</strong>
+                          <div>
+                            <div style={{ fontWeight: 700 }}>{u.name}</div>
+                            <div className="muted">@{u.username}</div>
+                          </div>
+                        </div>
+                        <div style={{ textAlign: "right" }}>
+                          <strong>{u.xp}</strong> XP
+                          <div className="muted">{u.badge}</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {activeTab === "dashboard" && (
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <div style={{ flex: 1 }}>
+                      <div className="card">
+                        <h3>Your Profile</h3>
+                        <p className="muted">{currentUser.bio}</p>
+                        <div style={{ marginTop: 8 }}>
+                          {(currentUser.skills || []).map(s => <span key={s} className="skill-tag">{s}</span>)}
+                        </div>
+                        <div style={{ marginTop: 10 }}>
+                          <button className="small-btn" onClick={() => setEditProfileOpen(true)}>Edit Profile</button>
+                        </div>
+                      </div>
+                      <div className="card" style={{ marginTop: 12 }}>
+                        <h3>Recent Exchanges</h3>
+                        {requests.filter(r => r.from === currentUser.username || r.to === currentUser.username).slice().reverse().map((r, i) => (
+                          <div key={i} style={{ padding: 8, borderRadius: 8, background: "#fff", marginBottom: 8 }}>
+                            <div style={{ fontWeight: 700 }}>{r.from} → {r.to}</div>
+                            <div className="muted">Status: {r.status || "pending"}</div>
+                            {r.note && <div style={{ fontStyle: "italic", marginTop: 4 }}>Note: {r.note}</div>}
+                          </div>
+                        ))}
+                        {requests.filter(r => r.from === currentUser.username || r.to === currentUser.username).length === 0 && <div className="muted">No exchanges yet</div>}
+                      </div>
+                    </div>
+                    <div style={{ width: 320 }}>
+                      <div className="card">
+                        <h3>Quick Actions</h3>
+                        <button className="small-btn" onClick={() => setActiveTab("profiles")}>Find Profiles</button>
+                        <button className="small-btn" style={{ marginTop: 8 }} onClick={() => setActiveTab("leaderboard")}>View Leaderboard</button>
+                        <button className="small-btn" style={{ marginTop: 8 }} onClick={() => setActiveTab("chats")}>Open Chats</button>
+                      </div>
+                      <div className="card" style={{ marginTop: 12 }}>
+                        <h3>Badges</h3>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <div style={{ padding: 8, borderRadius: 8, background: "#feeeba" }}>Newbie</div>
+                          <div style={{ padding: 8, borderRadius: 8, background: "#d1f7e8" }}>Mentor</div>
+                          <div style={{ padding: 8, borderRadius: 8, background: "#dfe8ff" }}>Pro</div>
+                          <div style={{ padding: 8, borderRadius: 8, background: "#ffd6a5" }}>Legend</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {toast && <Toast message={toast} onClose={() => setToast("")} />}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function AuthPanel({ onLogin, onRegister, onReset }) {
+      const [mode, setMode] = useState("login");
+
+      return (
+        <div className="login-wrapper">
+          <div style={{ display: "flex", gap: 32, alignItems: "flex-start", width: "100%", maxWidth: 860 }}>
+            {mode === "login" && <LoginForm onLogin={onLogin} switchToRegister={() => setMode("register")} switchToForgot={() => setMode("forgot")} />}
+            {mode === "register" && <RegisterForm onRegister={onRegister} switchToLogin={() => setMode("login")} />}
+            {mode === "forgot" && <ForgotForm onReset={onReset} switchToLogin={() => setMode("login")} />}
+            <div className="auth-card" style={{ maxWidth: 320 }}>
+              <img src="https://ik.imagekit.io/pibjyepn7p9/Lilac_Navy_Simple_Line_Business_Logo_CGktk8RHK.png" className="login-logo" alt="SkillGram Logo" />
+              <div style={{ fontWeight: 700, fontSize: 22, margin: "18px 0 10px 0", color: "#2b6cb0" }}>Welcome to SkillGram Pro</div>
+              <div className="muted" style={{ marginBottom: 14 }}>A creative skill-exchange platform — find people to learn from, send exchange requests, chat, earn XP &amp; badges.</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function LoginForm({ onLogin, switchToRegister, switchToForgot }) {
+      const [username, setUsername] = useState("");
+      const [password, setPassword] = useState("");
+      const [isLoading, setIsLoading] = useState(false);
+
+      function handleSubmit(e) {
+        e.preventDefault();
+        setIsLoading(true);
+        setTimeout(() => {
+          onLogin(username.trim(), password);
+          setIsLoading(false);
+        }, 400);
+      }
+
+      return (
+        <form className="login-card login-form" onSubmit={handleSubmit} autoComplete="on">
+          <img src="https://ik.imagekit.io/pibjyepn7p9/Lilac_Navy_Simple_Line_Business_Logo_CGktk8RHK.png" className="login-logo" alt="SkillGram Pro Logo" />
+          <div className="login-title">SkillGram Pro</div>
+          <label htmlFor="login-username">Username</label>
+          <input
+            type="text" id="login-username" name="username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            autoFocus autoComplete="username"
+            required
+          />
+          <label htmlFor="login-password">Password</label>
+          <input
+            type="password" id="login-password" name="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+          <button type="submit" className="login-btn" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign in"}
+          </button>
+          <div className="login-nav">
+            <span onClick={switchToRegister} tabIndex="0" role="button">Register</span>
+            <span onClick={switchToForgot} tabIndex="0" role="button">Forgot?</span>
+          </div>
+        </form>
+      );
+    }
+
+    function RegisterForm({ onRegister, switchToLogin }) {
+      const [username, setUsername] = useState("");
+      const [password, setPassword] = useState("");
+      const [name, setName] = useState("");
+      const [email, setEmail] = useState("");
+      const [bio, setBio] = useState("");
+      const [skills, setSkills] = useState([]);
+      const [avatar, setAvatar] = useState("");
+
+      function handleAvatarChange(e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => setAvatar(reader.result);
+        reader.readAsDataURL(file);
+      }
+      function handleSubmit(e) {
+        e.preventDefault();
+        onRegister({ username: username.trim(), password, name, email, bio, skills, avatar });
+      }
+
+      return (
+        <form className="auth-card register-form" onSubmit={handleSubmit}>
+          <div className="login-title" style={{ marginBottom: 10 }}>Create account</div>
+          <label htmlFor="register-username">Username</label>
+          <input id="register-username" value={username} onChange={e => setUsername(e.target.value)} required />
+          <label htmlFor="register-password">Password</label>
+          <input id="register-password" type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+          <label htmlFor="register-name">Full name</label>
+          <input id="register-name" value={name} onChange={e => setName(e.target.value)} required />
+          <label htmlFor="register-email">Email</label>
+          <input id="register-email" value={email} onChange={e => setEmail(e.target.value)} required />
+          <label htmlFor="register-bio">Short bio</label>
+          <textarea id="register-bio" value={bio} onChange={e => setBio(e.target.value)} style={{ minHeight: 40 }} required />
+          <label htmlFor="register-skills">Select skills (Ctrl/Cmd+click to multi-select)</label>
+          <select id="register-skills" multiple style={{ minHeight: 86, marginBottom: "7px" }} onChange={e => setSkills([...e.target.selectedOptions].map(o => o.value))}>
+            <option>React</option><option>JavaScript</option><option>Python</option><option>Machine Learning</option>
+            <option>Android</option><option>Kotlin</option><option>Design</option><option>SQL</option><option>Figma</option>
+          </select>
+          <label htmlFor="register-avatar">Profile picture (optional)</label>
+          <input type="file" id="register-avatar" accept="image/*" onChange={handleAvatarChange} />
+          {avatar && <img src={avatar} style={{ width: 56, height: 56, borderRadius: 12, marginTop: 8 }} alt="avatar preview" />}
+          <button type="submit" className="register-btn">Create account</button>
+          <div className="register-nav" style={{ marginTop: 8 }}>
+            <span onClick={switchToLogin} tabIndex="0" role="button">Back to login</span>
+          </div>
+        </form>
+      );
+    }
+
+    function ForgotForm({ onReset, switchToLogin }) {
+      const [username, setUsername] = useState("");
+      const [newPass, setNewPass] = useState("");
+      function handleSubmit(e) {
+        e.preventDefault();
+        onReset(username.trim(), newPass);
+      }
+      return (
+        <form className="auth-card forgot-form" onSubmit={handleSubmit}>
+          <div className="login-title" style={{ marginBottom: 10 }}>Reset Password</div>
+          <label htmlFor="forgot-username">Username</label>
+          <input id="forgot-username" value={username} onChange={e => setUsername(e.target.value)} required />
+          <label htmlFor="forgot-password">New password</label>
+          <input id="forgot-password" value={newPass} onChange={e => setNewPass(e.target.value)} required />
+          <button type="submit" className="forgot-btn">Change password</button>
+          <div className="forgot-nav" style={{ marginTop: 8 }}>
+            <span onClick={switchToLogin} tabIndex="0" role="button">Back to login</span>
+          </div>
+        </form>
+      );
+    }
+
+    function EditProfileModal({ currentUser, onSave, onClose, skills }) {
+      const [bio, setBio] = useState(currentUser.bio || "");
+      const [selectedSkills, setSelectedSkills] = useState(currentUser.skills || []);
+      const [avatar, setAvatar] = useState(currentUser.avatar || "");
+      const [name, setName] = useState(currentUser.name);
+
+      function handleAvatarChange(e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => setAvatar(reader.result);
+        reader.readAsDataURL(file);
+      }
+
+      function handleSubmit(e) {
+        e.preventDefault();
+        if (!name.trim()) {
+          alert("Name cannot be empty.");
+          return;
+        }
+        onSave({ ...currentUser, bio, skills: selectedSkills, avatar, name });
+      }
+
+      return (
+        <form className="card" onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+          <h3>Edit Profile</h3>
+          <label>Full name</label>
+          <input value={name} onChange={e => setName(e.target.value)} required />
+          <label>Bio</label>
+          <textarea value={bio} onChange={e => setBio(e.target.value)} style={{ minHeight: 50 }} />
+          <label>Skills (Ctrl/Cmd+click to multi-select)</label>
+          <select multiple value={selectedSkills} onChange={e => setSelectedSkills([...e.target.selectedOptions].map(o => o.value))} style={{ minHeight: 80 }}>
+            {skills.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <label>Profile picture (optional)</label>
+          <input type="file" accept="image/*" onChange={handleAvatarChange} />
+          {avatar && <img src={avatar} style={{ width: 56, height: 56, borderRadius: 12, marginTop: 8 }} alt="avatar preview" />}
+          <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between" }}>
+            <button type="button" onClick={onClose} className="small-btn" style={{ background: "#aaa", width: "48%" }}>Cancel</button>
+            <button type="submit" className="small-btn" style={{ width: "48%" }}>Save</button>
+          </div>
+        </form>
+      );
+    }
+
+    function ChatWindow({ currentUser, users, chats, unreads, sendMessageTo, markRead, preselect, setPreselect }) {
+      const userList = users.filter(u => u.username !== currentUser.username);
+      const [activeUser, setActiveUser] = useState(userList.length > 0 ? userList[0].username : "");
+      const [msg, setMsg] = useState("");
+      const [typing, setTyping] = useState(false);
+      const chatKey = activeUser ? [currentUser.username, activeUser].sort().join("__") : null;
+      const conv = chats[chatKey] || [];
+
+      useEffect(() => {
+        if (preselect && userList.some(u => u.username === preselect)) {
+          setActiveUser(preselect);
+          setPreselect("");
+        }
+      }, [preselect, userList, setPreselect]);
+
+      useEffect(() => {
+        if (chatKey) markRead(chatKey);
+      }, [activeUser, chatKey, markRead]);
+
+      useEffect(() => {
+        const chatbox = document.querySelector(".chat-box");
+        if (chatbox) chatbox.scrollTop = chatbox.scrollHeight;
+      }, [conv]);
+
+      let typingTimeout;
+      function handleMsgChange(e) {
+        const val = e.target.value;
+        setMsg(val);
+        if (!typing) setTyping(true);
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => setTyping(false), 1500);
+      }
+
+      function handleSend() {
+        if (activeUser && msg.trim()) {
+          sendMessageTo(activeUser, msg.trim());
+          setMsg("");
+          setTyping(false);
+        }
+      }
+
+      function handleKey(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          handleSend();
+        }
+      }
+
+      return <div>
+        <select value={activeUser || ""} onChange={e => setActiveUser(e.target.value)} style={{ marginBottom: 9 }}>
+          {userList.map(u => <option key={u.username} value={u.username}>{u.name} (@{u.username})</option>)}
+        </select>
+        {userList.length === 0 && <div className="muted" style={{ margin: "14px 0" }}>No other members to chat with yet.</div>}
+        <div className="chat-box" style={{ whiteSpace: "pre-line" }}>
+          {conv.map((m, i) =>
+            <div key={i} className={`msg ${m.from === currentUser.username ? "me" : "them"}`}>{m.text}<div className="timestamp">{m.from} • {m.time}</div></div>)}
+          {typing && <div className="muted" style={{ padding: "4px 8px" }}>Typing...</div>}
+        </div>
+        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+          <textarea
+            value={msg}
+            onChange={handleMsgChange}
+            disabled={!activeUser}
+            placeholder={activeUser ? `Message @${activeUser}` : "Select a person to chat"}
+            onKeyDown={handleKey}
+            rows={2}
+            style={{ resize: "none", flex: 1, borderRadius: 8, border: "1px solid #e6f3ff", padding: "8px 12px", fontSize: 15 }}
+          />
+          <button className="small-btn" disabled={!activeUser || !msg.trim()} onClick={handleSend}>Send</button>
+        </div>
+      </div>;
+    }
+
+    function RequestWithNoteBtn({ toUsername, sendRequest }) {
+      const [showForm, setShowForm] = useState(false);
+      const [note, setNote] = useState("");
+
+      function handleSend() {
+        sendRequest(toUsername, note);
+        setShowForm(false);
+        setNote("");
+      }
+
+      if (showForm) {
+        return (
+          <div style={{ marginTop: 6 }}>
+            <textarea
+              placeholder="Add a note (optional)"
+              value={note}
+              onChange={e => setNote(e.target.value)}
+              style={{ width: "100%", minHeight: 50, borderRadius: 8, border: "1px solid #e6f3ff", padding: "8px 10px" }}
+            />
+            <div style={{ marginTop: 6, display: "flex", gap: 6 }}>
+              <button className="exchange-btn" onClick={handleSend}>Send Request</button>
+              <button className="withdraw-btn" style={{ width: "auto" }} onClick={() => { setShowForm(false); setNote(""); }}>Cancel</button>
+            </div>
+          </div>
+        );
+      }
+
+      return <button className="exchange-btn" onClick={() => setShowForm(true)}>Exchange Skill</button>;
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
