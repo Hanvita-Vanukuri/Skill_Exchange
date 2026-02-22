@@ -1,28 +1,29 @@
-const http = require("http");
-const { Server } = require("socket.io");
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv").config();
 
-const server = http.createServer(app);
+const app = express();
 
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
+app.use(cors());
+app.use(express.json());
+
+// Routes
+app.use("/api/auth", require("./authroutes"));
+app.use("/api/chat", require("./chat"));
+
+// Root route (VERY IMPORTANT for Render)
+app.get("/", (req, res) => {
+  res.send("Peer to Peer Skill Exchange API Running 🚀");
 });
 
-io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
 
-  socket.on("join_room", (room) => {
-    socket.join(room);
-  });
+const PORT = process.env.PORT || 5000;
 
-  socket.on("send_message", (data) => {
-    io.to(data.room).emit("receive_message", data);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-  });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-server.listen(5000, () => console.log("Server running on port 5000"));
